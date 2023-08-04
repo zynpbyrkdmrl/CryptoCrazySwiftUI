@@ -9,8 +9,18 @@ import Foundation
 
 class WebService {
     
+    //completion yapmama ve result kullanmama gerek yok. direkt bana ne döndürceğini yazabiliyorum.
+    func downloadCurrenciesAsync(url:URL) async throws -> [CryptoCurrency] {
+        //dataTask yerine data kullanıyoruz.
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        let currencies = try? JSONDecoder().decode([CryptoCurrency].self, from: data)
+        
+        return currencies ?? []
+    }
+    
     //@escaping: bu fonksiyonun çalışması uzun sürecek, iş bitince bana şunu ver(result). ya crypto verecek ya da hata.
-    func downloadCurrencies (url: URL, completion: @escaping (Result<[CryptoCurrency]?,DownloaderError>)-> Void) {
+  /* func downloadCurrencies (url: URL, completion: @escaping (Result<[CryptoCurrency]?,DownloaderError>)-> Void) {
         URLSession.shared.dataTask(with: url) { data, response, error in
             
             if let error = error {
@@ -26,7 +36,7 @@ class WebService {
             }
             completion(.success(currencies))
         }.resume()
-    }
+    }*/
 }
 
 
