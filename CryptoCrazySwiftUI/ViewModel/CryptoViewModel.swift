@@ -7,6 +7,8 @@
 
 import Foundation
 
+@MainActor
+
 //ObservableObject sık karlaşılan bir şey. Burdaki herhangi bir değişikliği main viewda gözlemleyebileceğiz. @published. bu structlarda kullanılmadıgı için class yaptık.
 
 class CryptoListViewModel : ObservableObject {
@@ -20,9 +22,11 @@ class CryptoListViewModel : ObservableObject {
     func downloadCryptosContinuation (url:URL) async {
         do {
         let cryptos = try await webservice.downloadCurrenciesContinuation(url: url)
-            DispatchQueue.main.async {
+            self.cryptoList = cryptos.map(CryptoViewModel.init)
+            
+            /*DispatchQueue.main.async { // cryptoListi güncellediğimiz de viewı güncelliyoruz, bunun da main threadte olması gerekir.
                 self.cryptoList = cryptos.map(CryptoViewModel.init)
-            }
+            }*/
         } catch {
             print(error)
         }

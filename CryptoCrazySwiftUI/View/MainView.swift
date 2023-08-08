@@ -31,7 +31,15 @@ struct MainView: View {
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-            }.navigationTitle(Text("Crypto Crazy"))
+            }.toolbar(content: {
+                Button {
+                    Task.init { await cryptoListviewModel.downloadCryptosContinuation(url: URL(string: "https://raw.githubusercontent.com/atilsamancioglu/K21-JSONDataSet/master/crypto.json")!)}
+                } label: {
+                    Text("Resfresh")
+                }
+
+            })
+            .navigationTitle(Text("Crypto Crazy"))
         }.task { //.task async oldugu için kullanabiliyoruz. onAppearı kullanamayız.
             
             await cryptoListviewModel.downloadCryptosContinuation(url: URL(string: "https://raw.githubusercontent.com/atilsamancioglu/K21-JSONDataSet/master/crypto.json")!)
